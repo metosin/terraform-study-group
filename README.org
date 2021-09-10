@@ -8,10 +8,47 @@
 * Topics
 ** 1   Understand infrastructure as code (IaC) concepts
 *** 1a   Explain what IaC is
+    - Programmable infrastructure
+    - Different kind of interfaces
+    - Infrastructure defined as code
 *** 1b   Describe advantages of IaC patterns
+    - IaC source acts as documentation
+      - can be statically analyzed etc
+      - easier to share information about the infrastructure
+    - Declarative
+    - Version controlled
+    - Velocity
+      - Faster changes
+        - no need to wait for the infra guy to push button etc?
+*** Other notes
+**** not so declarative:
+      - may be esoteric calls to remote repositories
+
 ** 2   Understand Terraform's purpose (vs other IaC)
+
 *** 2a   Explain multi-cloud and provider-agnostic benefits
+    - Unified methodology to managing resources
+      - declarative language describes everything
+    - Multicloud
+      - AZURE, AWS, GCP etc..
+    - Same tool can describe resources in various cloud environments
+    - provider: "Managed Binary"
+
 *** 2b   Explain the benefits of state
+    - What if there were no state?
+    - Can diff between infrastructure declaration versus actual state of the infrastructure
+    - Can plan in advance the changes by inspecting the diff
+    - what if the state gets too big?
+      - doing small changes...
+    - benefits of partitioning state?
+    - techniques to partition state?
+    - What is the state gets corrupted?
+
+*** Ansible vs. Cloudfront vs. Terraform
+    - Ansible is imperative
+    - Ansible is a configuration management tool, [[https://www.reddit.com/r/devops/comments/lqk92n/you_are_on_an_island_and_can_only_have_terraform/gohlusl/?utm_source=reddit&utm_medium=web2x&context=3][ref]]
+    - Ansible is for hugging machines
+
 ** 3   Understand Terraform basics
 *** 3a   Handle Terraform and provider installation and versioning
 *** 3b   Describe plugin based architecture
