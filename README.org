@@ -51,10 +51,79 @@
 
 ** 3   Understand Terraform basics
 *** 3a   Handle Terraform and provider installation and versioning
+    - can be configured as required providers and inlining version to provider
+    - define provider block
+    - terraform init
+      - download binaries for the providers, etc "aws"
+
 *** 3b   Describe plugin based architecture
+    - Revisit this one
+
+**** What is a plugin (the binary)
+     Terraform Plugins: These are executable binaries written in Go that communicate
+     with Terraform Core over an RPC interface. Each plugin exposes an implementation
+     for a specific service, such as the AWS provider or the cloud-init provider.
+     Terraform currently supports one type of Plugin called providers.
+
 *** 3c   Demonstrate using multiple providers
+
+    - With AWS might be required to use multiple regions
+
+    #+begin_src terraform
+provider "aws" {
+  alias   = "aws"
+  region  = "eu-west-1"
+  version = "~> 2.70.0"
+}
+
+
+provider "aws" {
+  alias   = "aws_certificate"
+  region  = "us-east-1"
+  version = "~> 2.70.0"
+}
+    #+end_src
+
+    - Multiple different platforms communicating together
+      - e.g. Auth0 + AWS + Heroku
+
 *** 3d   Describe how Terraform finds and fetches providers
+    - terraform init
+    - looks plugins defined in providers from:
+      - public TF registry or in 3rd party provider registry
+      - local mirror or cache
+
 *** 3e   Explain when to use and not use provisioners and when to use local-exec or remote-exec
+    - run local script on terraform apply
+ #+begin_src terraform
+resource "aws_instance" "web" {
+  # ...
+
+  provisioner "local-exec" {
+    command = "echo ${self.private_ip} >> private_ips.txt"
+  }
+}
+
+ #+end_src
+    - remote-exec:
+      - run scripts in deployed VM's
+#+begin_src terraform
+resource "aws_instance" "web" {
+  # ...
+
+  provisioner "file" {
+    source      = "script.sh"
+    destination = "/tmp/script.sh"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /tmp/script.sh",
+      "/tmp/script.sh args",
+    ]
+  }
+}
+#+end_src
 ** 4   Use the Terraform CLI (outside of core workflow)
 *** 4a   Given a scenario: choose when to use terraform fmt to format code
 *** 4b   Given a scenario: choose when to use terraform taint to taint Terraform resources
