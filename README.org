@@ -48,6 +48,7 @@
     - Ansible is imperative
     - Ansible is a configuration management tool, [[https://www.reddit.com/r/devops/comments/lqk92n/you_are_on_an_island_and_can_only_have_terraform/gohlusl/?utm_source=reddit&utm_medium=web2x&context=3][ref]]
     - Ansible is for hugging machines
+      - Kimmo could explain what this means? :D
 
 ** 3   Understand Terraform basics
 *** 3a   Handle Terraform and provider installation and versioning
@@ -124,13 +125,68 @@ resource "aws_instance" "web" {
   }
 }
 #+end_src
+
 ** 4   Use the Terraform CLI (outside of core workflow)
 *** 4a   Given a scenario: choose when to use terraform fmt to format code
+    - Whenever the code is edited
+    - Can be used as a linting tool in CI
+      - =terraform fmt -recursive -diff=
+      -
+
+
 *** 4b   Given a scenario: choose when to use terraform taint to taint Terraform resources
+    - TODO: test taint, what happens to resource and state before after...
+    - Need to regenerate an access token or a key
+    - considered as deprecated
+      - should use =terraform apply -replace= instead
+
+        #+BEGIN_QUOTE
+        Creating a plan with the "replace" option is superior to using terraform taint because
+        it will allow you to see the full effect of that change before you take any externally-visible
+        action. When you use terraform taint to get a similar effect, you risk someone else on your
+        team creating a new plan against your tainted object before you've had a chance to review the
+        consequences of that change yourself. [[https://www.terraform.io/docs/cli/commands/taint.html][command: taint]]
+        #+END_QUOTE
+
+        #+begin_quote
+        The address argument is the address of the resource to mark as tainted.
+        The address is in the resource address syntax syntax, as shown in the
+        output from other commands
+        #+end_quote
+
 *** 4c   Given a scenario: choose when to use terraform import to import existing infrastructure into your Terraform state
+    - Incremental adoption
+    - Migrating existing infrastructure under terraform
+    - Import is possible only into state
+      - the configuration (code) can not be generated
+        #+begin_quote
+        Because of this, prior to running terraform import it is necessary to write manually a resource
+        configuration block for the resource, to which the imported object will be mapped.
+        [[https://www.terraform.io/docs/cli/import/index.html][command: import]]
+        #+end_quote
+
 *** 4d   Given a scenario: choose when to use terraform workspace to create workspaces
+    - When two or more isolated states are needed
+    - To isolate infrastructure
+    -
+      #+begin_src
+      In Terraform CLI, workspaces are separate instances of state data that can be used from the same working directory.
+      You can use workspaces to manage multiple non-overlapping groups of resources with the same configuration.
+      #+end_src
+      [[https://www.terraform.io/docs/cli/workspaces/index.html][terraform: workspace]]
+
 *** 4e   Given a scenario: choose when to use terraform state to view Terraform state
+    - Inspecting state (find credentials/access keys/etc)
+    - Debugging: not sure if some value has propagated correctly all the way to the resource
+    - Fix corrupted state
+
 *** 4f   Given a scenario: choose when to enable verbose logging and what the outcome/value is
+    - Debugging
+    #+begin_quote
+    You can set TF_LOG to one of the log levels TRACE, DEBUG, INFO, WARN or ERROR to change the verbosity of the logs.
+    #+end_quote
+    [[https://www.terraform.io/docs/internals/debugging.html ][terraform: debugging]]
+
 ** 5   Interact with Terraform modules
 *** 5a   Contrast module source options
 *** 5b   Interact with module inputs and outputs
